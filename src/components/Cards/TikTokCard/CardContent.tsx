@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import React from "react";
-import { StyleSheet, TouchableOpacity } from "react-native";
+import { Pressable, StyleSheet, TouchableOpacity } from "react-native";
 
 import { Column } from "@src/components/Containers";
 import Text from "@src/components/Text";
@@ -27,10 +27,19 @@ const CardOptionButton = ({
   );
 };
 
-const CardContent = () => {
+interface CardContentProps {
+  isPaused: boolean;
+  onPress?: () => void;
+}
+
+/**
+ * Component for TikTok Card that has the details and options
+ *
+ */
+const CardContent = ({ isPaused, onPress }: CardContentProps) => {
   return (
-    <Column alignItems="center" gap={16} style={styles.container}>
-      {/* Right card options */}
+    <Pressable style={styles.container} onPress={onPress}>
+      {/* Card options */}
       <Column gap={24} style={{ alignSelf: "flex-end" }}>
         {/* User image/avatar */}
         <Column
@@ -50,7 +59,8 @@ const CardContent = () => {
         <CardOptionButton iconName="arrow-redo" value="Share" />
       </Column>
 
-      <Column gap={16} style={{ width: "100%", height: 56 }}>
+      {/* Card info/details */}
+      <Pressable style={{ width: "100%", gap: 16 }}>
         <Text fontSize="sm" fontWeight="bold" color="#fff">
           @userhandle
         </Text>
@@ -58,8 +68,13 @@ const CardContent = () => {
         <Text fontSize="xs" fontWeight="500" color="#fff">
           #hashtag1 #hashtag2
         </Text>
-      </Column>
-    </Column>
+      </Pressable>
+
+      {/* Show play icon if video is paused */}
+      {isPaused && (
+        <Ionicons name="play" size={80} color="#fff" style={styles.playIcon} />
+      )}
+    </Pressable>
   );
 };
 
@@ -67,7 +82,10 @@ export default CardContent;
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     width: "100%",
+    justifyContent: "flex-end",
+    gap: 16,
     paddingHorizontal: 8,
     paddingBottom: 8,
   },
@@ -80,5 +98,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 4,
     maxWidth: 48,
+  },
+  playIcon: {
+    alignSelf: "center",
+    position: "absolute",
+    top: "50%",
+    opacity: 0.5,
   },
 });

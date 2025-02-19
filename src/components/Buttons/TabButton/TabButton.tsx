@@ -4,7 +4,6 @@ import { Pressable, PressableProps, StyleSheet } from "react-native";
 
 import { Column } from "@src/components/Containers";
 import Text from "@src/components/Text";
-import useRenderCount from "@src/hooks/useRenderCount";
 import { arePropsEqual } from "@src/utils/memoize";
 
 interface TabButtonProps extends PressableProps {
@@ -22,8 +21,6 @@ const TabButton = ({
   onPress,
   onLongPress,
 }: TabButtonProps) => {
-  useRenderCount(label);
-
   // Display Custom UI for post tab
   if (isCustom) {
     return (

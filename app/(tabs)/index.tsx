@@ -1,53 +1,19 @@
-import { FlashList } from "@shopify/flash-list";
 import React from "react";
-import { Pressable, useWindowDimensions } from "react-native";
+import { Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 
-import { TikTokCard } from "@src/components/Cards";
-import { Column, Container, Row } from "@src/components/Containers";
+import { Container, Row } from "@src/components/Containers";
+import CustomList from "@src/components/CustomList";
 import Text from "@src/components/Text";
-
-const DATA = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14];
 
 const HomeScreen = () => {
   // Hooks
   const insets = useSafeAreaInsets();
-  const { height } = useWindowDimensions();
-
-  // Local state
-  const [activeCardIndex, setActiveCardIndex] = React.useState(0);
-
-  const onViewableItemsChanged = React.useCallback(({ viewableItems }: any) => {
-    if (viewableItems.length > 0) {
-      setActiveCardIndex(viewableItems[0].index);
-    }
-  }, []);
-
-  const renderItem = React.useCallback(
-    ({ item, index }: { item: any; index: number }) => {
-      const isActive = activeCardIndex === index;
-      return <TikTokCard height={cardHeight} isActive={isActive} />;
-    },
-    [activeCardIndex]
-  );
-
-  const tabBarHeight = 56 + insets.bottom;
-  const cardHeight = height - tabBarHeight;
 
   return (
     <Container alignItems="center">
-      <Column style={{ flex: 1, width: "100%" }}>
-        <FlashList
-          data={DATA}
-          renderItem={renderItem}
-          extraData={activeCardIndex}
-          estimatedItemSize={height / 2}
-          pagingEnabled={true}
-          scrollEventThrottle={32}
-          viewabilityConfig={{ viewAreaCoveragePercentThreshold: 80 }} // Triggers when at least 80% of a card is visible
-          onViewableItemsChanged={onViewableItemsChanged}
-        />
-      </Column>
+      {/* Displays list of items */}
+      <CustomList />
 
       {/* Header for filters */}
       <Row

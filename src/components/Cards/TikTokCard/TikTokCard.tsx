@@ -1,5 +1,4 @@
 import { useEvent } from "expo";
-import { useFocusEffect } from "expo-router";
 import { VideoView, useVideoPlayer } from "expo-video";
 import React from "react";
 import { StyleSheet } from "react-native";
@@ -8,18 +7,15 @@ import { Column } from "@src/components/Containers";
 
 import CardContent from "./CardContent";
 
-const videoSource =
-  "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
-
-const TikTokCard = ({
-  height,
-  isActive,
-}: {
+interface TikTokCardProps {
+  url: string;
   height: number;
   isActive: boolean;
-}) => {
+}
+
+const TikTokCard = ({ url, height, isActive }: TikTokCardProps) => {
   // Video
-  const player = useVideoPlayer(videoSource, (player) => {
+  const player = useVideoPlayer(url, (player) => {
     player.loop = true;
   });
 
@@ -27,34 +23,23 @@ const TikTokCard = ({
     isPlaying: player.playing,
   });
 
-  useFocusEffect(
-    React.useCallback(() => {
-      // Card is not active in screen
-      // Pause player
-      if (!isActive) {
-        player.pause();
-        return;
-      }
-
-      // Card is focused auto play video
+  React.useEffect(() => {
+    // Card is active, auto play video
+    if (isActive) {
       player.play();
-
-      return () => {
-        // Card is unfocused paused video
-        player.pause();
-      };
-    }, [isActive])
-  );
+    } else {
+      player.pause();
+    }
+  }, [isActive]);
 
   const onPlayPauseVideo = () => {
     if (isPlaying) {
       return player.pause();
     }
-
     player.play();
   };
 
-  const isPaused = !isPlaying && player.status !== "loading";
+  const isPaused = !isPlaying && player.status === "readyToPlay";
 
   return (
     <Column backgroundColor="#000" style={{ height, width: "100%" }}>
